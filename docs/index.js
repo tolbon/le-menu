@@ -1,11 +1,11 @@
 const allergen = [
     { id: 'Gluten', name: 'Gluten' },
     { id: 'Crustacés', name: 'Crustacés' },
-    { id: 'Oeufs', name: 'Oeufs' },
+    { id: 'en:eggs', name: 'Oeufs' },
     { id: 'Poissons', name: 'Poissons' },
     { id: 'Arachides', name: 'Arachides' },
     { id: 'Soja', name: 'Soja' },
-    { id: 'Lait', name: 'Lait' },
+    { id: 'en:milk', name: 'Lait' },
     { id: 'Fruits a coques', name: 'Fruits a coques' },
     { id: 'Céleri', name: 'Céleri' },
     { id: 'Moutarde', name: 'Moutarde' },
@@ -60,6 +60,14 @@ const menu = {
                                         name: 'BigMacDo',
                                         description: 'LE BIG MAC DE MACDO',
                                         ingredients: ['Bun', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                                        price: 23
+                                    },
+                                    {
+                                        name: 'EggMacMuffin',
+                                        description: 'urger avec des oeufs',
+                                        ingredients: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                                        allergen: ['en:eggs', 'en:milk'],
+                                        diet: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
                                         price: 23
                                     },
                                     {
@@ -138,9 +146,17 @@ const menu = {
             hasMenuItem: [
                 {
                     name: 'BigMacDo',
-                    description: 'LE BIG MAC DE MACDO',
+                    description: 'le big mac de mac do quoi',
                     ingredients: ['Bun', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions']
-                }
+                },
+                {
+                    name: 'EggMacMuffin',
+                    description: 'burger avec des oeufs',
+                    ingredients: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    allergen: ['en:eggs', 'en:milk'],
+                    diet: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    price: 23
+                },
             ]
         }
     ]
@@ -163,6 +179,43 @@ const ingredientDiv = document.getElementById("categoryDiv");
 /** @type {HTMLDivElement} */
 const menuDiv = document.getElementById("menuDiv");
 
+allergenMultiSelect.addEventListener('change', (ev) => {
+    const values = Array.from(allergenMultiSelect.selectedOptions)
+                    .map(option => option.value)
+    filterAllergen(menu, values)
+})
+dietMultiSelect.addEventListener('change', (ev) => {
+    console.log(dietMultiSelect.selectedOptions)   
+})
+ingredientsMultiSelect.addEventListener('change', (ev) => {
+    console.log(ingredientsMultiSelect.selectedOptions)
+})
+
+function filterAllergen(menuObj, values) {
+    if (menuObj.hasMenuSection) {
+        menuObj.hasMenuSection.forEach((ms) => { 
+            filterAllergen(ms, values)
+        })
+    }
+
+    if (menuObj.menuAddon) {
+        menuObj.menuAddon.forEach((ms) => { 
+            filterAllergen(ms, values)
+        })   
+    }
+
+    if (menuObj.hasMenuItem) {
+        console.log(menuObj.hasMenuItem, menuObj.hasMenuItem.filter(menuItem => {
+            const containAllergen = !(menuItem.allergen ?? []).some((allergen) => {
+                console.log('values', allergen, values.includes(allergen))
+                return values.includes(allergen)
+            })
+            console.log('filter', menuItem.name, containAllergen)
+            return containAllergen
+        }))
+    }
+
+}
 createMultiSelectOptGroup(multiSelectOptGroup, 'Allergen', allergen)
 createMultiSelectOptGroup(multiSelectOptGroup, 'Diet', diet)
 createMultiSelectOptGroup(multiSelectOptGroup, 'Ingredients', ingredients)
@@ -218,6 +271,7 @@ function createDivCheckBox(divAddTo, objArray) {
 }
 
 function createMenu(divAddTo, menuObj, level = 2) {
+    divAddTo.innerHTML = ''
     /** @type {HTMLDivElement} */
     const title = document.createElement(`h${level}`);
     title.textContent = menuObj.name
