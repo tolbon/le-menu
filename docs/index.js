@@ -1,18 +1,18 @@
 const allergen = [
-    { id: 'Gluten', name: 'Gluten' },
-    { id: 'Crustacés', name: 'Crustacés' },
+    { id: 'en:gluten', name: 'Gluten' },
+    { id: 'en:crustaceans', name: 'Crustacés' },
     { id: 'en:eggs', name: 'Oeufs' },
-    { id: 'Poissons', name: 'Poissons' },
-    { id: 'Arachides', name: 'Arachides' },
-    { id: 'Soja', name: 'Soja' },
+    { id: 'en:fish', name: 'Poissons' },
+    { id: 'en:peanuts', name: 'Arachides' },
+    { id: 'en:soybeans', name: 'Soja' },
     { id: 'en:milk', name: 'Lait' },
-    { id: 'Fruits a coques', name: 'Fruits a coques' },
-    { id: 'Céleri', name: 'Céleri' },
-    { id: 'Moutarde', name: 'Moutarde' },
-    { id: 'Graines de sésame', name: 'Graines de sésame' },
+    { id: 'en:nuts', name: 'Fruits a coques' },
+    { id: 'en:celery', name: 'Céleri' },
+    { id: 'en:mustard', name: 'Moutarde' },
+    { id: 'en:sesame-seeds', name: 'Graines de sésame' },
     { id: 'Sulfites', name: 'Sulfites' },
-    { id: 'Lupin', name: 'Lupin' },
-    { id: 'Mollusque', name: 'Mollusque' },
+    { id: 'en:lupin', name: 'Lupin' },
+    { id: 'en:molluscs', name: 'Mollusque' },
 ]
 
 const diet = [
@@ -158,6 +158,24 @@ const menu = {
                     price: 23
                 },
             ]
+        },
+        {
+            name: 'Petite Faim',
+            hasMenuItem: [
+                {
+                    name: 'MacWrap',
+                    description: 'un wrap',
+                    ingredients: ['Bun', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions']
+                },
+                {
+                    name: 'McFish',
+                    description: 'burger avec du poisson',
+                    ingredients: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    allergen: ['en:eggs', 'en:milk'],
+                    diet: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    price: 23
+                },
+            ]
         }
     ]
 }
@@ -181,14 +199,28 @@ const menuDiv = document.getElementById("menuDiv");
 
 allergenMultiSelect.addEventListener('change', (ev) => {
     const values = Array.from(allergenMultiSelect.selectedOptions)
-                    .map(option => option.value)
-    filterAllergen(menu, values)
+                    .map(option => option.value);
+    filter.allergen = values;
+    
+    const menu_deepcopy = JSON.parse(JSON.stringify(menu));
+    menuDiv.innerHTML = ''
+    displayMenu(menuDiv, filterAllergen(menu_deepcopy, filter))
 })
 dietMultiSelect.addEventListener('change', (ev) => {
-    console.log(dietMultiSelect.selectedOptions)   
+    const values = Array.from(dietMultiSelect.selectedOptions)
+                    .map(option => option.value);
+    filter.diet = values;
+    const menu_deepcopy = JSON.parse(JSON.stringify(menu));
+    menuDiv.innerHTML = ''
+    displayMenu(menuDiv, filterAllergen(menu_deepcopy, filter))
 })
 ingredientsMultiSelect.addEventListener('change', (ev) => {
-    console.log(ingredientsMultiSelect.selectedOptions)
+    const values = Array.from(ingredientsMultiSelect.selectedOptions)
+                    .map(option => option.value);
+    filter.ingredients = values;
+    const menu_deepcopy = JSON.parse(JSON.stringify(menu));
+    menuDiv.innerHTML = ''
+    displayMenu(menuDiv, filterAllergen(menu_deepcopy, filter))
 })
 
 function filterAllergen(menuObj, values) {
@@ -201,21 +233,42 @@ function filterAllergen(menuObj, values) {
     if (menuObj.menuAddon) {
         menuObj.menuAddon.forEach((ms) => { 
             filterAllergen(ms, values)
-        })   
+        })
     }
 
     if (menuObj.hasMenuItem) {
-        console.log(menuObj.hasMenuItem, menuObj.hasMenuItem.filter(menuItem => {
-            const containAllergen = !(menuItem.allergen ?? []).some((allergen) => {
-                console.log('values', allergen, values.includes(allergen))
-                return values.includes(allergen)
+        menuObj.hasMenuItem = menuObj.hasMenuItem.filter(menuItem => {
+            const containAllergen = (menuItem.allergen ?? []).some((allergen) => {
+                return filter.allergen.includes(allergen)
             })
-            console.log('filter', menuItem.name, containAllergen)
-            return containAllergen
-        }))
+            if (containAllergen) {
+                return false
+            }
+            const containDiet = (menuItem.diet ?? []).some((diet) => {
+                return filter.diet.includes(diet)
+            })
+            if (containDiet) {
+                return true
+            }
+            if (filter.ingredients.length === 0) {
+                return true
+            }
+            const needIngredients = (menuItem.ingredients ?? []).some((ingredient) => {
+                return filter.ingredients.includes(ingredient)
+            })
+            return needIngredients
+        })
     }
 
+    return menuObj
 }
+
+const filter = {
+    allergen: [],
+    diet: [],
+    ingredients: []
+}
+
 createMultiSelectOptGroup(multiSelectOptGroup, 'Allergen', allergen)
 createMultiSelectOptGroup(multiSelectOptGroup, 'Diet', diet)
 createMultiSelectOptGroup(multiSelectOptGroup, 'Ingredients', ingredients)
@@ -225,7 +278,9 @@ createMultiSelect(ingredientsMultiSelect, ingredients)
 createDivCheckBox(allergenDiv, allergen)
 createDivCheckBox(dietDiv, diet)
 createDivCheckBox(ingredientDiv, ingredients)
-createMenu(menuDiv, menu)
+
+const menu_deepcopy = JSON.parse(JSON.stringify(menu));
+displayMenu(menuDiv, filterAllergen(menu_deepcopy, filter))
 
 function createMultiSelectOptGroup(divAddTo, nameOptGroup, objArray) {
     const optGroup = document.createElement("optgroup");
@@ -270,8 +325,7 @@ function createDivCheckBox(divAddTo, objArray) {
     });
 }
 
-function createMenu(divAddTo, menuObj, level = 2) {
-    divAddTo.innerHTML = ''
+function displayMenu(divAddTo, menuObj, level = 2) {
     /** @type {HTMLDivElement} */
     const title = document.createElement(`h${level}`);
     title.textContent = menuObj.name
@@ -284,7 +338,7 @@ function createMenu(divAddTo, menuObj, level = 2) {
         /** @type {HTMLDivElement} */
         const menuSectionDiv = document.createElement('div');
         menuObj.hasMenuSection.forEach((menuSection) => {
-            createMenu(menuSectionDiv, menuSection, level + 1)
+            displayMenu(menuSectionDiv, menuSection, level + 1)
         })
         divAddTo.appendChild(menuSectionDiv)
     }
@@ -355,17 +409,12 @@ function generateDialog(formDialog, menuObj) {
     })
 }
 
-
-
-let updateButton = document.getElementById('updateDetails');
 /** @type {HTMLDialogElement} */
 let favDialog = document.getElementById('favDialog');
 /** @type {HTMLFormElement} */
 let formDialog = document.getElementById('formDialog');
 /** @type {HTMLDivElement} */
 let divDialog = document.getElementById('divDialog');
-
-updateButton.addEventListener('click', onOpenFavDialog);
 
 function onOpenFavDialog() {
   if (typeof favDialog.showModal === "function") {
