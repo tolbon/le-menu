@@ -7,8 +7,25 @@
     --shadow-highlight-color: hsl(219 62% 42% / 25%);
 }
 
-@media (pointer: coarse) {
+select[multiple] {
+    display: none;
+}
 
+html {
+    block-size: 100%;
+    color-scheme: dark light;
+    background-color: var(--surface-color-1);
+    color: var(--text-color-1);
+}
+
+@media (pointer: coarse) {
+    select[multiple] {
+        display: block;
+    }
+
+    fieldset {
+        display: none;
+    }
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -16,29 +16,29 @@ const allergen = [
 ]
 
 const diet = [
-    { id: 'Diabetic', name: 'Diabetic' },
-    { id: 'GlutenFree', name: 'GlutenFree' },
-    { id: 'Halal', name: 'Halal' },
-    { id: 'Hindu', name: 'Hindu' },
-    { id: 'Kosher', name: 'Kosher' },
-    { id: 'LowCalorie', name: 'LowCalorie' },
-    { id: 'LowFat', name: 'LowFat' },
-    { id: 'LowLactose', name: 'LowLactose' },
-    { id: 'LowSalt', name: 'LowSalt' },
-    { id: 'Pregnant', name: 'Pregnant' },
-    { id: 'Vegan', name: 'Vegan' },
-    { id: 'Vegetarian', name: 'Vegetarian' },
+    { id: 'en:diabetic', name: 'Diabetique' },
+    { id: 'en:glutenFree', name: 'Sans Gluten' },
+    { id: 'en:halal', name: 'Halal' },
+    { id: 'en:hindu', name: 'Hindu' },
+    { id: 'en:kosher', name: 'Kasher' },
+    { id: 'en:lowCalorie', name: 'Minimum Calorie' },
+    { id: 'en:lowFat', name: 'Minimum Gras' },
+    { id: 'en:lowLactose', name: 'Minimum Lactose' },
+    { id: 'en:lowSalt', name: 'Minimum Sel' },
+    { id: 'en:pregnant', name: 'Enceinte' },
+    { id: 'en:vegan', name: 'Vegan' },
+    { id: 'en:vegetarian', name: 'Vegetarien' },
 ]
 
 /**
  * PERSONNALISER ?
  */
 const ingredients = [
- { id: 'porc', name: 'porc' },
- { id: 'volaille', name: 'volaille' },
- { id: 'boeuf', name: 'boeuf' },
- { id: 'poisson', name: 'poisson' },
- { id: 'Fromage', name: 'Fromage' },
+ { id: 'en:pig', name: 'Porc' },
+ { id: 'en:chicken', name: 'Volaille' },
+ { id: 'en:beef', name: 'Boeuf' },
+ { id: 'en:fish', name: 'Poisson' },
+ { id: 'en:cheese', name: 'Fromage' },
 ]
 
 
@@ -83,14 +83,14 @@ const menu = {
                                 hasMenuItem: [
                                     {
                                         name: 'Frite',
-                                        description: 'LE BIG MAC DE MACDO',
-                                        ingredients: ['Bun', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                                        description: 'Des Frites Quoi',
+                                        ingredients: ['en:potatoes'],
                                         price: 23
                                     },
                                     {
                                         name: 'Potatoes',
-                                        description: 'LE BIG MAC DE MACDO',
-                                        ingredients: ['Bun', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                                        description: 'Grosse potate',
+                                        ingredients: ['en:potatoes'],
                                         price: 23
                                     }
                                 ]
@@ -160,19 +160,91 @@ const menu = {
             ]
         },
         {
+            name: 'A Composer',
+            hasMenuItem: [
+                {
+                    name: 'OTacos taille L',
+                    description: '2 Viandes au choix, sauces au choix, frites et notre sauce fromagère unique comprise.',
+                    ingredients: [],
+                    menuAddon: {
+                        hasMenuSection: [
+                            {
+                                name: 'Choisissez vos 2 viandes!',
+                                description: 'Obligatoire',
+                                offers: {
+                                    eligibleQuantity: 2
+                                },
+                                hasMenuItem: [
+                                    {
+                                        name: 'Tenders',
+                                        description: '',
+                                        allergen: ['en:gluten'],
+                                        ingredients: ['en:chicken'],
+                                        price: 1.5
+                                    },
+                                    {
+                                        name: 'Poulet',
+                                        description: '',
+                                        allergen: [],
+                                        ingredients: ['en:chicken'],
+                                    },
+                                ]
+                            },
+                            {
+                                name: 'Choisissez votre Sauce',
+                                description: 'Obligatoire',
+                                offers: {
+                                    eligibleQuantity: 1
+                                },
+                                hasMenuItem: [
+                                    {
+                                        name: 'Algerienne',
+                                        description: '',
+                                        allergen: [],
+                                        ingredients: ['en:spicy'],
+                                        price: 1.5
+                                    },
+                                    {
+                                        name: 'Barbecue',
+                                        description: '',
+                                        allergen: [],
+                                        ingredients: ['en:beef'],
+                                    },
+                                    {
+                                        name: 'Sans Sauce',
+                                        description: '',
+                                        allergen: [],
+                                        ingredients: ['en:chicken'],
+                                    },
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    name: 'EggMacMuffin',
+                    description: 'burger avec des oeufs',
+                    ingredients: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    allergen: ['en:eggs', 'en:milk'],
+                    diet: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    price: 23
+                },
+            ]
+        },
+        {
             name: 'Petite Faim',
             hasMenuItem: [
                 {
                     name: 'MacWrap',
                     description: 'un wrap',
-                    ingredients: ['Bun', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions']
+                    ingredients: ['Bun', 'en:chicken', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions']
                 },
                 {
                     name: 'McFish',
                     description: 'burger avec du poisson',
-                    ingredients: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
-                    allergen: ['en:eggs', 'en:milk'],
-                    diet: ['en:eggs', 'eggs', 'Beef', 'Lettuce', 'BigMac Sauce', 'American Cheese', 'Pickle', 'Onions'],
+                    ingredients: ['en:fish', 'en:buns'],
+                    allergen: ['en:fish', 'en:milk'],
+                    diet: ['en:diabetic', 'en:pregnant', 'en:halal', 'en:kosher'],
                     price: 23
                 },
             ]
@@ -223,17 +295,16 @@ ingredientsMultiSelect.addEventListener('change', (ev) => {
     displayMenu(menuDiv, filterAllergen(menu_deepcopy, filter))
 })
 
-function filterAllergen(menuObj, values) {
+function filterAllergen(menuObj, values, level = 0) {
+    const newLevel = level + 1 
     if (menuObj.hasMenuSection) {
-        menuObj.hasMenuSection.forEach((ms) => { 
-            filterAllergen(ms, values)
+        menuObj.hasMenuSection.forEach((ms) => {
+            filterAllergen(ms, values, newLevel)
         })
     }
 
     if (menuObj.menuAddon) {
-        menuObj.menuAddon.forEach((ms) => { 
-            filterAllergen(ms, values)
-        })
+        filterAllergen(menuObj.menuAddon, values, newLevel)
     }
 
     if (menuObj.hasMenuItem) {
@@ -250,6 +321,9 @@ function filterAllergen(menuObj, values) {
             if (containDiet) {
                 return true
             }
+            if (filter.diet.length > 0) {
+                return false
+            }
             if (filter.ingredients.length === 0) {
                 return true
             }
@@ -257,6 +331,10 @@ function filterAllergen(menuObj, values) {
                 return filter.ingredients.includes(ingredient)
             })
             return needIngredients
+        })
+
+        menuObj.hasMenuItem.forEach((ms) => {
+            filterAllergen(ms, values, newLevel)
         })
     }
 
@@ -392,19 +470,41 @@ function generateDialog(formDialog, menuObj) {
     formDialog.innerHTML = ''
     menuObj.menuAddon.hasMenuSection.forEach((menuSection) => {
         const p = document.createElement("p");
-        const label = document.createElement("label");
-        const select = document.createElement("select");
-        select.name = menuSection.name
+        const maxSelected = menuSection.offers?.eligibleQuantity ?? 1
+
+        if (maxSelected === 1) {
+            const label = document.createElement("label");
+            const select = document.createElement("select");
+            select.name = menuSection.name
+            label.textContent = menuSection.name
+            menuSection.hasMenuItem.forEach((menuItem, index) => {
+                const opt = document.createElement("option");
+                opt.value = index
+                opt.textContent = menuItem.name
+                select.add(opt)
+            })
+            label.appendChild(select)
+            p.appendChild(label)
+        } else {
+            const label = document.createElement("label");
+            const select = document.createElement("div");
+            select.name = menuSection.name
+            label.textContent = menuSection.name
+            menuSection.hasMenuItem.forEach((menuItem, index) => {
+                const divMenuItem = document.createElement("div");
+                const labelMenuItem = document.createElement("label");
+                const opt = document.createElement("input");
+                opt.type = 'number';
+                opt.value = 0
+                labelMenuItem.textContent = menuItem.name
+                labelMenuItem.appendChild(opt)
+                divMenuItem.appendChild(labelMenuItem)
+                select.appendChild(divMenuItem)
+            })
+            label.appendChild(select)
+            p.appendChild(label)
+        }
         
-        label.textContent = menuSection.name
-        menuSection.hasMenuItem.forEach((menuItem, index) => {
-            const opt = document.createElement("option");
-            opt.value = index
-            opt.textContent = menuItem.name
-            select.add(opt)
-        })
-        p.appendChild(label)
-        label.appendChild(select)
         divDialog.appendChild(p)
     })
 }
