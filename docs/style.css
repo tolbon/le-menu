@@ -20,10 +20,13 @@ html {
 
 @media (pointer: coarse) {
     select[multiple] {
-        display: block;
         font-size: max(100%, 1rem);
         padding-inline: 1ch;
         padding-block: .5ch;
+    }
+
+    select[multiple] {
+        display: block;
     }
 
     fieldset {
