@@ -496,6 +496,8 @@ function generateDialog(formDialog, menuObj) {
                 const opt = document.createElement("input");
                 opt.type = 'number';
                 opt.value = 0
+                opt.min = 0
+                opt.max = maxSelected
                 labelMenuItem.textContent = menuItem.name
                 labelMenuItem.appendChild(opt)
                 divMenuItem.appendChild(labelMenuItem)
